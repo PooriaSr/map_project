@@ -5,4 +5,5 @@ class Dimens {
   static const small = 8.00;
   static const large = 24.00;
   static const xLarge = 32.00;
+  static const xxLarge = 48.00;
 }

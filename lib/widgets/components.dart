@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:map_project/constants/dimens.dart';
+import 'package:map_project/constants/my_strings.dart';
 import 'package:map_project/constants/my_text_styles.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:map_project/gen/assets.gen.dart';
@@ -8,20 +11,20 @@ Widget myElevatedBtn(BuildContext context, String title, Function() function) {
   return ElevatedButton(
     onPressed: function,
     style: ButtonStyle(
-      fixedSize: const MaterialStatePropertyAll(Size(double.infinity, 50)),
-      shape: MaterialStatePropertyAll(
+      fixedSize: const WidgetStatePropertyAll(Size(double.infinity, 50)),
+      shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-      backgroundColor: MaterialStateProperty.resolveWith((states) {
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
         Color color;
-        if (states.contains(MaterialState.pressed)) {
+        if (states.contains(WidgetState.pressed)) {
           color = const Color.fromARGB(194, 0, 111, 18);
         } else {
           color = const Color.fromARGB(247, 3, 143, 26);
         }
         return color;
       }),
-      textStyle: MaterialStatePropertyAll(MyTextStyles.button),
-      foregroundColor: const MaterialStatePropertyAll(Colors.white),
+      textStyle: WidgetStatePropertyAll(MyTextStyles.buttonTextStyle),
+      foregroundColor: const WidgetStatePropertyAll(Colors.white),
     ),
     child: Text(title),
   );
@@ -43,23 +46,119 @@ class BackBtn extends StatelessWidget {
         size: 28,
       ),
       style: ButtonStyle(
-          iconColor: const MaterialStatePropertyAll(Colors.white),
+          iconColor: const WidgetStatePropertyAll(Colors.white),
           backgroundColor:
-              const MaterialStatePropertyAll(Color.fromARGB(164, 0, 0, 0)),
-          fixedSize: const MaterialStatePropertyAll(Size(53, 53)),
-          shape: MaterialStatePropertyAll(
+              const WidgetStatePropertyAll(Color.fromARGB(164, 0, 0, 0)),
+          fixedSize: const WidgetStatePropertyAll(Size(53, 53)),
+          shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))),
     );
   }
 }
 
-Widget beginingMarker = SvgPicture.asset(
-  Assets.icons.origin,
-  height: 100,
-);
-Widget endingMarker = SvgPicture.asset(Assets.icons.destination);
-Widget loadingWidget = const Center(
-  child: SpinKitCircle(
-    color: Colors.black,
-  ),
-);
+Widget beginingMarker(double animationValue) {
+  // container on Mark : w:23 , h:9.7
+  return Center(
+    child: Transform.scale(
+      scale: 3.5,
+      child: Stack(alignment: Alignment.topRight, children: [
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 800),
+          width: animationValue,
+          height: 9.7,
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(5)),
+          child: SizedBox(
+            child: Text(
+              ' مبدا',
+              style: MyTextStyles.iconLabel,
+              textDirection: TextDirection.ltr,
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 10,
+          height: 16,
+          child: SvgPicture.asset(
+            Assets.icons.origin,
+            fit: BoxFit.fill,
+          ),
+        ),
+      ]),
+    ),
+  );
+}
+
+Widget endingMarker(double animationValue) {
+  // container on Mark : w:23 , h:9.7
+  return Transform.scale(
+    scale: 3.5,
+    child: Stack(alignment: Alignment.topRight, children: [
+      AnimatedContainer(
+        duration: const Duration(seconds: 4),
+        width: 0 + animationValue * 1.20,
+        height: 9.7,
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(2)),
+        child: SizedBox(
+          child: Text(
+            ' مقصد',
+            style: MyTextStyles.iconLabel,
+            textDirection: TextDirection.ltr,
+          ),
+        ),
+      ),
+      SizedBox(
+        width: 10,
+        height: 16,
+        child: SvgPicture.asset(
+          Assets.icons.destination,
+          fit: BoxFit.fill,
+        ),
+      ),
+    ]),
+  );
+}
+
+List<Widget> distMsg(context, controller) {
+  String kmNum = convertEngNumToPer(controller.getDistance()['km']);
+  String mNum = convertEngNumToPer(controller.getDistance()['m']);
+
+  return [
+    SizedBox(
+        width: Dimens.phoneWidth(context) - Dimens.large * 3,
+        child: Text(
+          "${MyStrings.distanceMsg} : $mNum متر ",
+          style: MyTextStyles.msgTextStyle,
+        )),
+    SizedBox(
+        width: Dimens.phoneWidth(context) - Dimens.large * 3,
+        child: Text(
+          "${MyStrings.distanceMsg} : $kmNum کیلومتر و $mNum متر",
+          style: MyTextStyles.msgTextStyle,
+        ))
+  ];
+}
+
+String convertEngNumToPer(String number) {
+  List eng = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  List per = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+  for (var element in number.split('')) {
+    number = number.replaceAll(element, per[eng.indexOf(element)]);
+  }
+  return number;
+}
+
+Timer timer(Function setState, controller) {
+  return Timer.periodic(const Duration(seconds: 2), (timer) {
+    bool myTimer = true;
+    if (controller.loading == false) {
+      setState(() {
+        myTimer = false;
+      });
+    }
+    if (myTimer == false) {
+      timer.cancel();
+    }
+  });
+}

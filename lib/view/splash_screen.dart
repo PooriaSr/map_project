@@ -16,8 +16,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     mapScreenController.determinePosition();
-    Future.delayed(Duration(seconds: 5)).then((value) => Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const MapScreen())));
+    Future.delayed(const Duration(seconds: 5)).then((value) =>
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const MapScreen())));
 
     return const Scaffold(
       body: Center(

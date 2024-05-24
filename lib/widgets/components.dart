@@ -1,8 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:map_project/constants/dimens.dart';
 import 'package:map_project/constants/my_strings.dart';
@@ -65,8 +62,7 @@ Widget beginingMarker(double animationValue) {
     child: Transform.scale(
       scale: 3.5,
       child: Stack(alignment: Alignment.topRight, children: [
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 800),
+        Container(
           width: animationValue,
           height: 9.7,
           decoration: BoxDecoration(
@@ -167,7 +163,7 @@ Container findDriver(context, Function setState, controller) {
           size: 80,
           color: Colors.red,
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Text(

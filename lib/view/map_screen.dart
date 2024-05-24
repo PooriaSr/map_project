@@ -19,11 +19,12 @@ class _MapScreenState extends State<MapScreen>
     with SingleTickerProviderStateMixin {
   final MapScreenController _mapScreenController = MapScreenController();
   MapController mapController = MapController();
+  late final AnimationController animationController;
 
   @override
   void initState() {
     super.initState();
-
+    animationController = AnimationController(vsync: this);
     _mapScreenController.determinePosition();
     _mapScreenController.timer(
         setState,
@@ -53,13 +54,10 @@ class _MapScreenState extends State<MapScreen>
                   // urlTemplate: "${MyApi.mapUrl}?x-api-key=${MyApi.mapApiKey}"
                   urlTemplate:
                       'https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
-
               MarkerLayer(
                 markers: _mapScreenController.markers,
                 rotate: true,
               ),
-
-              //TODO: change this part
               Padding(
                 padding: const EdgeInsets.only(left: 40),
                 child: Center(
@@ -180,7 +178,7 @@ class _MapScreenState extends State<MapScreen>
               : const SizedBox.shrink(),
           _mapScreenController.curentState == 3
               ? findDriver(context, setState, _mapScreenController)
-              : SizedBox.shrink()
+              : const SizedBox.shrink()
         ],
       ),
     );

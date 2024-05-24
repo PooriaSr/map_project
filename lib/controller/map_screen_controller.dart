@@ -117,38 +117,6 @@ class MapScreenController {
     return address;
   }
 
-  // getUserPosition() async {
-  //   position = await Geolocator.getCurrentPosition(
-  //           desiredAccuracy: LocationAccuracy.high)
-  //       .then((value) {
-  //     log(position.toString());
-  //     return position;
-  //   });
-  // }
-
-  // checkUserLocationPermission() async {
-  //   await Geolocator.isLocationServiceEnabled().then((bool isEnable) async {
-  //     if (isEnable) {
-  //       await Geolocator.checkPermission()
-  //           .then((LocationPermission permission) async {
-  //         if (permission != LocationPermission.denied &&
-  //             permission != LocationPermission.deniedForever &&
-  //             permission != LocationPermission.unableToDetermine) {
-  //           await Geolocator.requestPermission()
-  //               .then((LocationPermission permission) => {
-  //                     log(permission.toString()),
-  //                     if (permission == LocationPermission.always ||
-  //                         permission == LocationPermission.whileInUse)
-  //                       {getUserPosition()}
-  //                     else
-  //                       {throw ('couldnt get permission')}
-  //                   });
-  //         }
-  //       });
-  //     }
-  //   });
-  // }
-
   Future<Position?> determinePosition() async {
     LocationPermission permission;
     permission = await Geolocator.checkPermission();
@@ -173,7 +141,6 @@ class MapScreenController {
 
   Timer timer(Function setState, controller, MapController mapController,
       BuildContext context, Widget errorSnackBar) {
-    bool myTimer = true;
     return Timer.periodic(const Duration(seconds: 1), (timer) {
       bool myTimer = true;
       if (controller.loading == false) {

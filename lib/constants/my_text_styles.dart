@@ -13,4 +13,8 @@ class MyTextStyles {
   static TextStyle iconLabel = GoogleFonts.vazirmatn(
     fontSize: 6,
   );
+  static TextStyle snackBarTextStyle =
+      GoogleFonts.vazirmatn(fontSize: 17, color: Colors.black);
+  static TextStyle findDriverTextStyle =
+      GoogleFonts.vazirmatn(fontSize: 20, color: Colors.black);
 }

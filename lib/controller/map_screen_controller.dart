@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:developer';
+import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -44,11 +46,13 @@ class MapScreenController {
       if (screenStates.length == 2 || screenStates.length == 3) {
         markers.removeLast();
       }
+
+      if (screenStates.length == 2) {
+        points.clear();
+      }
       screenStates.removeLast();
 
       curentState = screenStates.last;
-
-      points.clear();
     }
   }
 
@@ -165,5 +169,34 @@ class MapScreenController {
     }
 
     return await Geolocator.getCurrentPosition();
+  }
+
+  Timer timer(Function setState, controller, MapController mapController,
+      BuildContext context, Widget errorSnackBar) {
+    bool myTimer = true;
+    return Timer.periodic(const Duration(seconds: 1), (timer) {
+      bool myTimer = true;
+      if (controller.loading == false) {
+        myTimer = false;
+
+        mapController.move(
+            LatLng(myPosition.latitude, myPosition.longitude), 17);
+      }
+      if (myTimer == false || timer.tick > 10) {
+        if (timer.tick > 9) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: errorSnackBar,
+              backgroundColor: Colors.white,
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        }
+        setState(() {
+          timer.cancel();
+          controller.loading = false;
+        });
+      }
+    });
   }
 }

@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:map_project/constants/dimens.dart';
 import 'package:map_project/constants/my_strings.dart';
 import 'package:map_project/constants/my_text_styles.dart';
@@ -149,16 +152,51 @@ String convertEngNumToPer(String number) {
   return number;
 }
 
-Timer timer(Function setState, controller) {
-  return Timer.periodic(const Duration(seconds: 2), (timer) {
-    bool myTimer = true;
-    if (controller.loading == false) {
-      setState(() {
-        myTimer = false;
-      });
-    }
-    if (myTimer == false) {
-      timer.cancel();
-    }
-  });
+Container findDriver(context, Function setState, controller) {
+  return Container(
+    width: Dimens.phoneWidth(context),
+    height: Dimens.phoneHeight(context),
+    color: Colors.white,
+    child: Column(
+      children: [
+        SizedBox(
+          height: Dimens.phoneHeight(context) / 2.5,
+        ),
+        const Icon(
+          CupertinoIcons.car,
+          size: 80,
+          color: Colors.red,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          'در حال پیدا کردن راننده',
+          style: MyTextStyles.snackBarTextStyle,
+        ),
+        SizedBox(
+          height: Dimens.phoneHeight(context) / 32,
+        ),
+        const SpinKitThreeInOut(
+          color: Colors.red,
+        ),
+        SizedBox(
+          height: Dimens.phoneHeight(context) / 4.2,
+        ),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              controller.chooseStateOnBack();
+            });
+          },
+          style: ButtonStyle(
+              textStyle: WidgetStatePropertyAll(MyTextStyles.buttonTextStyle)),
+          child: Text(
+            'لغو درخواست',
+            style: MyTextStyles.buttonTextStyle,
+          ),
+        )
+      ],
+    ),
+  );
 }

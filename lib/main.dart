@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:map_project/view/map_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:map_project/view/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       ],
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
-      home: const MapScreen(),
+      home: const SplashScreen(),
     );
   }
 }
